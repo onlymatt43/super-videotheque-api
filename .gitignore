@@ -1,4 +1,18 @@
-node_modules
-dist
+# env / secrets
 .env
-.vercel
+.env.*
+*.env
+*.env.*
+
+# node
+node_modules/
+
+# build
+/dist/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
