@@ -2,6 +2,19 @@
 
 Service de location vidéo basé sur Node.js + Express, MongoDB et intégrations Payhip/Bunny.net.
 
+## Développement local
+
+**Prérequis**
+- Node.js LTS (recommandé: `22`, voir `.nvmrc`)
+- MongoDB (Atlas ou local)
+
+**Démarrage**
+```bash
+nvm use || true
+npm install
+npm run dev
+```
+
 ## Fonctionnalités principales
 - REST API structurée (controllers/services/routes).
 - Validation serveur des codes Payhip avant création d'une location.
@@ -9,30 +22,22 @@ Service de location vidéo basé sur Node.js + Express, MongoDB et intégrations
 - Génération de liens Bunny.net signés et temporisés pour chaque lecture.
 - TypeScript, logger Pino, validations Zod, middlewares d'erreurs prêts pour la prod.
 
-## Déploiement Vercel
+## Déploiement Render
 
-Ce backend est déployé en tant que serverless functions sur Vercel.
+Ce backend est déployé en tant que service Node sur Render.
 
-**URL de production:** https://backend-j3rvyszxi-matts-projects-77a3636c.vercel.app
+**URL de production:** https://super-videotheque-api.onrender.com
 
 **Configuration requise:**
-- `api/index.js` - Point d'entrée serverless (exporte l'app Express)
-- `vercel.json` - Configuration avec `rewrites` vers `/api`
-- Variables d'environnement configurées dans le dashboard Vercel (16 variables)
+- `render.yaml` - Build/Start + env vars
 
-**Déploiement:**
-```bash
-cd backend
-vercel --prod
-```
+## Variables d'environnement (Render)
 
-## Variables d'environnement (Vercel)
-
-Toutes ces variables doivent être configurées dans le dashboard Vercel pour le projet backend.
+Toutes ces variables doivent être configurées dans le dashboard Render pour le service.
 
 | Nom | Description |
 | --- | --- |
-| `PORT` | Port HTTP (optionnel, Vercel gère automatiquement). |
+| `PORT` | Port HTTP (Render fournit via variable d'env). |
 | `MONGO_URI` | URI MongoDB Atlas. |
 | `PAYHIP_API_BASE_URL` | Racine de l'API Payhip (ex: `https://payhip.com/api/v2`). |
 | `PAYHIP_API_KEY` | Jeton d'API Payhip. |
@@ -42,6 +47,7 @@ Toutes ces variables doivent être configurées dans le dashboard Vercel pour le
 | `BUNNY_LIBRARY_ID` | (Optionnel) ID de la librairie Bunny pour l'import automatique. |
 | `BUNNY_API_KEY` | (Optionnel) AccessKey Bunny Video API (utilisé par le seeder). |
 | `DEFAULT_RENTAL_HOURS` | Durée par défaut d'une location (heures). |
+| `ADMIN_PASSWORD` | Mot de passe admin (utilisé pour les routes admin). |
 
 ### Import massif depuis Bunny
 
