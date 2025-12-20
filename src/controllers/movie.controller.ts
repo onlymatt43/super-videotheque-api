@@ -52,3 +52,11 @@ export const updateMovie = async (req: Request, res: Response) => {
   }
   res.json({ data: movie });
 };
+
+export const deleteMovie = async (req: Request, res: Response) => {
+  const deleted = await movieService.remove(req.params.id);
+  if (!deleted) {
+    throw new AppError('Movie not found', StatusCodes.NOT_FOUND);
+  }
+  res.status(StatusCodes.NO_CONTENT).send();
+};

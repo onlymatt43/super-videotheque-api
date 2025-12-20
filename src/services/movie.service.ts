@@ -22,10 +22,16 @@ const update = async (id: string, payload: Partial<MovieAttrs>): Promise<MovieDo
   return Movie.findByIdAndUpdate(id, payload, { new: true }).exec();
 };
 
+const remove = async (id: string): Promise<boolean> => {
+  const result = await Movie.deleteOne({ _id: id }).exec();
+  return (result.deletedCount ?? 0) > 0;
+};
+
 export const movieService = {
   list,
   listFreePreviews,
   getById,
   create,
-  update
+  update,
+  remove
 };
