@@ -30,7 +30,7 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
   const transport = getTransporter();
   
   if (!transport) {
-    logger.warn('Email non configuré, message ignoré:', options.subject);
+    logger.warn({ subject: options.subject }, 'Email non configuré, message ignoré');
     return;
   }
 

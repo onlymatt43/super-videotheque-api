@@ -1,8 +1,10 @@
+import mongoose from 'mongoose';
 import { syncAllLibraries } from './syncBunny.js';
 import { performHealthCheck, restartRenderService } from './healthCheck.js';
 import { generateSecurityAnalytics, formatReportForEmail } from './securityAnalytics.js';
 import { sendAlert } from '../src/services/email.service.js';
 import { logger } from '../src/config/logger.js';
+import { env } from '../src/config/env.js';
 
 interface CronReport {
   timestamp: string;

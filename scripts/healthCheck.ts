@@ -13,7 +13,7 @@ export interface HealthStatus {
 export async function checkMongoDB(): Promise<HealthStatus> {
   try {
     await mongoose.connect(env.MONGO_URI);
-    const stats = await mongoose.connection.db.stats();
+    const stats = await mongoose.connection.db!.stats();
     await mongoose.disconnect();
 
     return {
@@ -172,15 +172,15 @@ export async function performHealthCheck(): Promise<{
   // Bunny Libraries
   checks.push(
     await checkBunnyLibrary(
-      env.BUNNY_LIBRARY_ID,
-      env.BUNNY_API_KEY,
+      env.BUNNY_LIBRARY_ID!,
+      env.BUNNY_API_KEY!,
       'Principale (454374)'
     )
   );
   checks.push(
     await checkBunnyLibrary(
-      env.BUNNY_PUBLIC_LIBRARY_ID,
-      env.BUNNY_PUBLIC_API_KEY,
+      env.BUNNY_PUBLIC_LIBRARY_ID!,
+      env.BUNNY_PUBLIC_API_KEY!,
       'Preview (420867)'
     )
   );

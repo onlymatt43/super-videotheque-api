@@ -128,8 +128,8 @@ export async function syncAllLibraries(): Promise<SyncResult[]> {
 
     // Sync library principale
     const mainResult = await syncLibrary(
-      env.BUNNY_LIBRARY_ID,
-      env.BUNNY_API_KEY,
+      env.BUNNY_LIBRARY_ID!,
+      env.BUNNY_API_KEY!,
       'Library Principale (454374)',
       false
     );
@@ -137,8 +137,8 @@ export async function syncAllLibraries(): Promise<SyncResult[]> {
 
     // Sync library preview
     const previewResult = await syncLibrary(
-      env.BUNNY_PUBLIC_LIBRARY_ID,
-      env.BUNNY_PUBLIC_API_KEY,
+      env.BUNNY_PUBLIC_LIBRARY_ID!,
+      env.BUNNY_PUBLIC_API_KEY!,
       'Library Preview (420867)',
       true
     );

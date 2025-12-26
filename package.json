@@ -20,6 +20,7 @@
     "health:check": "tsx scripts/healthCheck.ts",
     "security:analytics": "tsx scripts/securityAnalytics.ts",
     "test:generate-data": "tsx scripts/generateTestData.ts",
+    "migrate:fetch": "tsx scripts/migrateFetch.ts",
     "cron:full": "tsx scripts/cronFull.ts"
   },
   "dependencies": {
