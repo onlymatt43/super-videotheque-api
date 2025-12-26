@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "lint": "echo 'TODO: add linting'",
     "seed:movies": "tsx scripts/seedMovies.ts",
+    "migrate:library": "tsx scripts/migrateLibrary.ts",
     "previews": "tsx scripts/managePreviews.ts",
     "previews:list": "tsx scripts/managePreviews.ts list",
     "previews:enable": "tsx scripts/managePreviews.ts enable",
