@@ -21,7 +21,8 @@
     "security:analytics": "tsx scripts/securityAnalytics.ts",
     "test:generate-data": "tsx scripts/generateTestData.ts",
     "migrate:fetch": "tsx scripts/migrateFetch.ts",
-    "cron:full": "tsx scripts/cronFull.ts"
+    "cron:full": "tsx scripts/cronFull.ts",
+    "monitor:transcoding": "tsx scripts/monitorVideoTranscoding.ts"
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.4",
@@ -43,6 +44,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.5.2",
+    "cron": "^4.4.0",
     "pino-pretty": "^11.2.2",
     "tsx": "^4.15.7",
     "typescript": "^5.4.5"
