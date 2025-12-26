@@ -104,8 +104,8 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
     if (!payload.data || !payload.data.license_key) {
       // Log tentative de code invalide
       await logSecurityEvent('invalid_code', 'unknown', {
-        licenseKey,
-        email,
+        licenseKey: code,
+        email: payload.data?.buyer_email || 'unknown',
         reason: 'license_not_found',
       });
       throw new AppError('Licence Payhip introuvable ou invalide', 404);
@@ -114,8 +114,8 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
     // Check if license is disabled
     if (payload.data.enabled === false) {
       await logSecurityEvent('invalid_code', 'unknown', {
-        licenseKey,
-        email,
+        licenseKey: payload.data.license_key,
+        email: payload.data.buyer_email || 'unknown',
         reason: 'license_disabled',
       });
       throw new AppError('Cette licence a été désactivée', 403);
@@ -135,8 +135,8 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
       
       if (ageInMinutes > 60) {
         await logSecurityEvent('invalid_code', 'unknown', {
-          licenseKey,
-          email,
+          licenseKey: payload.data.license_key,
+          email: payload.data.buyer_email || 'unknown',
           reason: 'code_expired',
           ageInMinutes,
         });
@@ -146,7 +146,7 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
 
     // Log code ajouté avec succès
     await logAnalyticsEvent('code_added', {
-      userId: email,
+      userId: payload.data.buyer_email || 'unknown',
       metadata: {
         accessType: accessInfo.accessType,
         accessValue: accessInfo.accessValue,
