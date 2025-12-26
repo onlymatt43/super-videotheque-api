@@ -17,10 +17,88 @@ npm run dev
 
 ## Fonctionnalités principales
 - REST API structurée (controllers/services/routes).
+- **Système multi-codes** : Support de différents types d'accès (temporel, par film, par catégorie).
 - Validation serveur des codes Payhip avant création d'une location.
 - Gestion des locations uniques avec expiration automatique (TTL MongoDB).
 - Génération de liens Bunny.net signés et temporisés pour chaque lecture.
 - TypeScript, logger Pino, validations Zod, middlewares d'erreurs prêts pour la prod.
+
+## Système d'accès multi-codes
+
+Le backend supporte maintenant **trois types d'accès** distincts via les codes Payhip :
+
+### Types d'accès
+
+| Type | Description | Durée | Exemple de produit Payhip |
+| --- | --- | --- | --- |
+| **time** | Accès complet au catalogue | Limité (ex: 1h, 24h) | `TIME_1H` ou `TIME_24H` |
+| **film** | Accès à un film spécifique | Permanent | `FILM_676c45a3b9876543210abcde` |
+| **category** | Accès à une catégorie complète | Permanent | `CAT_horror` ou `CAT_action` |
+
+### Convention de nommage Payhip
+
+Le backend détecte automatiquement le type d'accès selon le **nom du produit** Payhip :
+
+**Accès temporel complet**
+```
+TIME_1H          → 1 heure d'accès complet
+TIME_2H          → 2 heures d'accès complet
+TIME_24H         → 24 heures d'accès complet
+"1H Access"      → Détecté comme 1h (contient "1H")
+```
+
+**Accès à un film spécifique**
+```
+FILM_676c45a3b9876543210abcde    → Accès permanent au film avec cet ID
+"Film special - FILM_123456"     → Détecté (contient "FILM_")
+```
+
+**Accès à une catégorie**
+```
+CAT_horror       → Accès permanent à tous les films d'horreur
+CAT_action       → Accès permanent à tous les films d'action
+CAT_comedy       → Accès permanent à tous les films comédie
+```
+
+### Création de produits Payhip
+
+1. Allez sur https://payhip.com/dashboard
+2. Créez un nouveau produit **License Key**
+3. **Nom du produit** : Utilisez une des conventions ci-dessus
+4. Le système détectera automatiquement le type d'accès
+5. Si aucune convention n'est détectée → accès temporel 1h par défaut (rétrocompatibilité)
+
+### Réponse API enrichie
+
+L'endpoint `POST /payhip/validate` retourne maintenant :
+
+```json
+{
+  "data": {
+    "success": true,
+    "licenseKey": "ABC123-XYZ",
+    "email": "user@example.com",
+    "productId": "12345",
+    "accessType": "time",      // "time" | "film" | "category"
+    "accessValue": "all",       // "all" | "film_id" | "category_slug"
+    "duration": 3600            // en secondes (uniquement pour type "time")
+  }
+}
+```
+
+### Exemples d'utilisation
+
+**Vendre 1h d'accès complet**
+- Nom produit Payhip : `TIME_1H`
+- Réponse : `{ accessType: "time", accessValue: "all", duration: 3600 }`
+
+**Vendre accès à un film**
+- Nom produit Payhip : `FILM_676c45a3b9876543210abcde`
+- Réponse : `{ accessType: "film", accessValue: "676c45a3b9876543210abcde", duration: undefined }`
+
+**Vendre accès à une catégorie**
+- Nom produit Payhip : `CAT_horror`
+- Réponse : `{ accessType: "category", accessValue: "horror", duration: undefined }`
 
 ## Déploiement Render
 
