@@ -19,7 +19,20 @@ const envSchema = z.object({
   BUNNY_PUBLIC_API_KEY: z.string().optional(),
   DEFAULT_RENTAL_HOURS: z.string().default('48'),
   ADMIN_PASSWORD: z.string().min(8, 'ADMIN_PASSWORD must be at least 8 characters'),
-  OPENAI_API_KEY: z.string().optional()
+  OPENAI_API_KEY: z.string().optional(),
+  
+  // Email (SMTP)
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  ALERT_EMAIL: z.string().optional(),
+
+  // Render/Vercel
+  RENDER_SERVICE_ID: z.string().optional(),
+  RENDER_TOKEN: z.string().optional(),
+  VERCEL_PROJECT_ID: z.string().optional(),
+  VERCEL_TOKEN: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -47,7 +60,20 @@ export const settings = {
   bunnyPublicApiKey: env.BUNNY_PUBLIC_API_KEY,
   defaultRentalHours: Number(env.DEFAULT_RENTAL_HOURS),
   adminPassword: env.ADMIN_PASSWORD,
-  openAIApiKey: env.OPENAI_API_KEY
+  openAIApiKey: env.OPENAI_API_KEY,
+  
+  // Email
+  smtpHost: env.SMTP_HOST,
+  smtpPort: env.SMTP_PORT,
+  smtpUser: env.SMTP_USER,
+  smtpPass: env.SMTP_PASS,
+  alertEmail: env.ALERT_EMAIL,
+  
+  // Render/Vercel
+  renderServiceId: env.RENDER_SERVICE_ID,
+  renderToken: env.RENDER_TOKEN,
+  vercelProjectId: env.VERCEL_PROJECT_ID,
+  vercelToken: env.VERCEL_TOKEN,
 };
 
 export { env };

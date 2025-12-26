@@ -2,6 +2,7 @@ import axios from 'axios';
 import { AppError } from '../utils/appError.js';
 import { settings } from '../config/env.js';
 import type { PayhipValidationResponse, AccessType } from '../types/payhip.js';
+import { logSecurityEvent, logAnalyticsEvent } from './analytics.service.js';
 
 const payhipClient = axios.create({
   baseURL: settings.payhipApiBaseUrl,
@@ -101,11 +102,22 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
 
     // Empty response or no data means invalid key
     if (!payload.data || !payload.data.license_key) {
+      // Log tentative de code invalide
+      await logSecurityEvent('invalid_code', 'unknown', {
+        licenseKey,
+        email,
+        reason: 'license_not_found',
+      });
       throw new AppError('Licence Payhip introuvable ou invalide', 404);
     }
 
     // Check if license is disabled
     if (payload.data.enabled === false) {
+      await logSecurityEvent('invalid_code', 'unknown', {
+        licenseKey,
+        email,
+        reason: 'license_disabled',
+      });
       throw new AppError('Cette licence a été désactivée', 403);
     }
 
@@ -122,9 +134,25 @@ export const validatePayhipCode = async (code: string): Promise<PayhipValidation
       const ageInMinutes = (now.getTime() - purchaseDate.getTime()) / (1000 * 60);
       
       if (ageInMinutes > 60) {
+        await logSecurityEvent('invalid_code', 'unknown', {
+          licenseKey,
+          email,
+          reason: 'code_expired',
+          ageInMinutes,
+        });
         throw new AppError('Ce code a expiré (valide 60 minutes après l\'achat)', 403);
       }
     }
+
+    // Log code ajouté avec succès
+    await logAnalyticsEvent('code_added', {
+      userId: email,
+      metadata: {
+        accessType: accessInfo.accessType,
+        accessValue: accessInfo.accessValue,
+        productName: payload.data.product_name,
+      },
+    });
 
     return {
       success: true,

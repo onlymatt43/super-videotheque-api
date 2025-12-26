@@ -15,9 +15,15 @@
     "previews:enable": "tsx scripts/managePreviews.ts enable",
     "previews:disable": "tsx scripts/managePreviews.ts disable",
     "previews:enable-all": "tsx scripts/managePreviews.ts enable-all",
-    "previews:disable-all": "tsx scripts/managePreviews.ts disable-all"
+    "previews:disable-all": "tsx scripts/managePreviews.ts disable-all",
+    "sync:bunny": "tsx scripts/syncBunny.ts",
+    "health:check": "tsx scripts/healthCheck.ts",
+    "security:analytics": "tsx scripts/securityAnalytics.ts",
+    "test:generate-data": "tsx scripts/generateTestData.ts",
+    "cron:full": "tsx scripts/cronFull.ts"
   },
   "dependencies": {
+    "@types/nodemailer": "^7.0.4",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -27,6 +33,7 @@
     "helmet": "^7.1.0",
     "http-status-codes": "^2.3.0",
     "mongoose": "^8.5.0",
+    "nodemailer": "^7.0.12",
     "openai": "^6.10.0",
     "pino": "^9.1.0",
     "zod": "^3.23.8"

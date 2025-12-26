@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { AppError } from '../utils/appError.js';
 import { env } from '../config/env.js';
+import { logSecurityEvent } from '../services/analytics.service.js';
 
 /**
  * Simple password-based authentication middleware for admin routes
@@ -21,6 +22,13 @@ export const requireAdmin = (req: Request, _res: Response, next: NextFunction) =
   }
 
   if (token !== env.ADMIN_PASSWORD) {
+    // Log tentative échouée
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    logSecurityEvent('admin_login_failed', ip, {
+      userAgent: req.headers['user-agent'],
+      path: req.path,
+    }).catch((err) => console.error('Error logging security event:', err));
+    
     throw new AppError('Accès non autorisé', StatusCodes.FORBIDDEN);
   }
 
